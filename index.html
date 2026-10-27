@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ข่าวเช้า 8 โมง</title>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FFF6E0;--ink:#1B1740;--muted:#5A5580;--panel:#FFFFFF;--line:#E9DFC2;--fs:22px;--card-ink:#1B1740;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17133A;--ink:#FFF6E0;--muted:#CFC9F5;--panel:#2A2560;--line:#3D3780}}
+:root[data-theme="dark"]{--bg:#17133A;--ink:#FFF6E0;--muted:#CFC9F5;--panel:#2A2560;--line:#3D3780}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 var(--fs)/1.5 'Prompt','Noto Sans Thai',system-ui,sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+.wrap{max-width:640px;margin:0 auto;padding:16px 16px 140px}
+button,select{font:inherit;cursor:pointer}
+button:focus-visible,select:focus-visible{outline:4px solid #7B3FF2;outline-offset:3px}
+header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+h1{margin:0;font-size:1.5em;line-height:1.2;font-weight:700}
+.date{margin:4px 0 0;color:var(--muted);font-size:.8em}
+.size{display:flex;gap:8px;flex:none}
+.size button{min-width:56px;min-height:56px;border-radius:18px;border:3px solid var(--ink);background:var(--panel);color:var(--ink);font-weight:700}
+.note{margin:14px 0;padding:10px 14px;border-radius:16px;background:#FFE45C;color:var(--card-ink);font-size:.72em}
+.ticker{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.cell{background:var(--panel);border:2px solid var(--line);border-radius:22px;padding:12px 14px}
+.cell .n{font-size:.72em;color:var(--muted)}
+.cell .v{font-size:1.25em;font-weight:700;line-height:1.2}
+.cell .c{font-size:.78em;font-weight:600}
+.up{color:#0E8F4A}.down{color:#D6283B}
+:root[data-theme="dark"] .up,:root:not([data-theme="light"]) .up{--u:1}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .up{color:#58E49A}:root:not([data-theme="light"]) .down{color:#FF8A95}}
+.all{width:100%;min-height:76px;border:0;border-radius:26px;background:linear-gradient(100deg,#7B3FF2,#FF4FA3);color:#fff;font-weight:700;font-size:1.1em;margin:4px 0 18px}
+.card{background:linear-gradient(150deg,var(--c1),var(--c2));color:var(--card-ink);border-radius:30px;padding:20px;margin:0 0 16px}
+.card.now{outline:6px solid #7B3FF2;outline-offset:3px}
+.top{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.ico{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.7);display:grid;place-items:center;font-size:1.5em;flex:none}
+.cat{font-weight:700}
+.card h2{margin:0 0 6px;font-size:1.12em;line-height:1.3;font-weight:700}
+.card p{margin:0 0 8px}
+.extra{background:rgba(255,255,255,.62);border-radius:18px;padding:10px 14px;margin:0 0 10px;font-size:.88em}
+.extra b{display:block}
+.src{font-size:.68em;opacity:.8;margin-bottom:10px!important}
+.say{min-height:60px;padding:0 24px;border-radius:999px;border:0;background:var(--card-ink);color:#fff;font-weight:600}
+[hidden]{display:none!important}
+.hist{width:100%;min-height:64px;border-radius:24px;border:3px solid #7B3FF2;background:var(--panel);color:var(--ink);font-weight:700;margin:-6px 0 18px}
+.cal{background:var(--panel);border:2px solid var(--line);border-radius:26px;padding:14px;margin:0 0 18px}
+.calhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.calhead button{min-width:56px;min-height:56px;border-radius:18px;border:3px solid var(--ink);background:var(--bg);color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.dow{text-align:center;font-size:.7em;color:var(--muted)}
+.day{aspect-ratio:1;min-height:44px;border-radius:14px;border:0;background:transparent;color:var(--muted);padding:0}
+.day.has{background:#EBDDFF;color:#1B1740;font-weight:700}
+.day.sel{background:#7B3FF2;color:#fff}
+.hint{margin:10px 0 0;font-size:.7em;color:var(--muted)}
+.viewing{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:#7B3FF2;color:#fff;border-radius:20px;padding:12px 14px;margin:0 0 14px;font-size:.8em}
+.viewing button{min-height:52px;border-radius:16px;border:0;background:#fff;color:#1B1740;font-weight:700;padding:0 16px}
+.foot{font-size:.65em;color:var(--muted);margin:8px 0 0}
+#bar{position:fixed;left:0;right:0;bottom:0;background:var(--panel);border-top:3px solid var(--ink);padding:12px 12px calc(12px + env(safe-area-inset-bottom,0px));display:none;z-index:5}
+#bar.on{display:block}
+.bar-in{max-width:640px;margin:0 auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+#bar button,#bar select{min-height:56px;border-radius:18px;border:3px solid var(--ink);background:var(--bg);color:var(--ink);padding:0 14px;font-weight:600}
+#now{flex-basis:100%;font-size:.7em;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div><h1>ข่าวเช้า 8 โมง</h1><p class="date" id="date"></p></div>
+    <div class="size" role="group" aria-label="ขนาดตัวอักษร">
+      <button id="smaller" aria-label="ลดขนาดตัวอักษร">ก-</button>
+      <button id="bigger" aria-label="เพิ่มขนาดตัวอักษร">ก+</button>
+    </div>
+  </header>
+  <p class="note">ตัวเลขและข่าวในหน้านี้เป็นข้อมูลตัวอย่างสำหรับทดสอบหน้าตา ไม่ใช่ข้อมูลจริง</p>
+  <div class="viewing" id="viewing" hidden><span id="vtext"></span><button id="back">กลับมาข่าววันนี้</button></div>
+  <section class="ticker" id="ticker" aria-label="ราคาและดัชนี"></section>
+  <button class="all" id="all">🔊 ฟังข่าวเช้านี้</button>
+  <button class="hist" id="histbtn">📅 ดูข่าวย้อนหลัง</button>
+  <section class="cal" id="cal" hidden aria-label="ปฏิทินข่าวย้อนหลัง">
+    <div class="calhead"><button id="prev" aria-label="เดือนก่อนหน้า">◀</button><strong id="mname"></strong><button id="next" aria-label="เดือนถัดไป">▶</button></div>
+    <div class="grid" id="grid"></div>
+    <p class="hint">วันที่พื้นสีม่วงอ่อนมีข่าวสรุปไว้ กดเพื่อดูได้เลย</p>
+  </section>
+  <main id="news"></main>
+  <p class="foot" id="foot" hidden>สรุปโดย AI จากหัวข้อข่าว ควรเช็กกับแหล่งข่าวก่อนตัดสินใจ</p>
+</div>
+
+<div id="bar" role="region" aria-label="ตัวควบคุมเสียง">
+  <div class="bar-in">
+    <div id="now"></div>
+    <button id="pp">⏸ หยุด</button>
+    <button id="skip">⏭ ข้าม</button>
+    <select id="rate" aria-label="ความเร็วเสียง">
+      <option value="0.7">เสียงช้า</option>
+      <option value="0.9" selected>เสียงปกติ</option>
+      <option value="1.1">เสียงเร็ว</option>
+    </select>
+    <button id="stop">✖ ปิด</button>
+  </div>
+</div>
+
+<script id="news-data" type="application/json">
+{
+ "updated": "อัปเดต 07:30 น.",
+ "indices": [
+  {"name": "ทองคำแท่ง (บาท)", "value": "41,500", "change": "+150", "up": true},
+  {"name": "ดัชนี SET", "value": "1,420.35", "change": "-6.20", "up": false},
+  {"name": "S&P 500", "value": "5,850.10", "change": "+22.40", "up": true},
+  {"name": "หุ้น ปตท. (PTT)", "value": "34.50", "change": "+0.25", "up": true}
+ ],
+ "news": [
+  {"cat": "หุ้นไทย", "icon": "🏦", "c1": "#8FD3FF", "c2": "#5CB8FF", "title": "ตลาดหุ้นไทยเคลื่อนไหวแคบ รอปัจจัยใหม่", "summary": "นักลงทุนชะลอการซื้อขายและรอข้อมูลเศรษฐกิจรอบใหม่", "source": "ตัวอย่าง"},
+  {"cat": "หุ้นสหรัฐ", "icon": "📈", "c1": "#B9B4FF", "c2": "#8F8CFF", "title": "ดัชนีสหรัฐปิดบวกเล็กน้อย", "summary": "หุ้นกลุ่มเทคโนโลยีหนุนตลาด นักลงทุนจับตาตัวเลขเศรษฐกิจสัปดาห์นี้", "source": "ตัวอย่าง"},
+  {"cat": "หุ้นจีน", "icon": "🐉", "c1": "#FFC49A", "c2": "#FF9F6B", "title": "ตลาดจีนได้แรงหนุนจากมาตรการภาครัฐ", "summary": "นักลงทุนมองบวกต่อมาตรการกระตุ้นเศรษฐกิจ", "source": "ตัวอย่าง"},
+  {"cat": "ทองคำ", "icon": "🪙", "c1": "#FFF27A", "c2": "#F6E02B", "title": "ราคาทองยังยืนระดับสูง", "summary": "ความไม่แน่นอนของเศรษฐกิจโลกทำให้ทองยังเป็นสินทรัพย์ที่คนเลือกถือ", "source": "ตัวอย่าง"},
+  {"cat": "ข่าวคู่แข่งบิ๊กซี", "icon": "🛒", "c1": "#FF9BCB", "c2": "#FF4FA3", "title": "คู่แข่งรายใหญ่เร่งโปรโมชันของสดสุดสัปดาห์", "summary": "คู่แข่งเพิ่มส่วนลดสินค้าอาหารสดและขยายบริการส่งถึงบ้าน", "strategy": "ดึงลูกค้าประจำด้วยราคาและความสะดวก", "action": "เช็กราคาสินค้าขายดีเทียบรอบสาขา และเตรียมของสดให้พร้อมช่วงสุดสัปดาห์", "source": "ตัวอย่าง"}
+ ]
+}
+</script>
+
+<script>
+(async function(){
+const SAMPLE=JSON.parse(document.getElementById('news-data').textContent);
+let D=SAMPLE;
+try{const r=await fetch('news.json?v='+Date.now(),{cache:'no-store'});if(r.ok){const j=await r.json();if(j&&j.news&&j.news.length)D=j}}catch(e){}
+if(D.sample===false){document.querySelector('.note').hidden=true;document.getElementById('foot').hidden=false}
+const $=id=>document.getElementById(id);
+const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
+
+$('date').textContent=new Date().toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+' · '+D.updated;
+
+const cards=[];
+function render(day){
+  stop();
+  $('ticker').textContent='';$('news').textContent='';cards.length=0;
+  (day.indices||[]).forEach(i=>{
+  const c=el('div','cell');
+  c.append(el('div','n',i.name),el('div','v',i.value),el('div','c '+(i.up?'up':'down'),(i.up?'▲ ':'▼ ')+i.change));
+  $('ticker').append(c);
+});
+$('ticker').hidden=!(day.indices&&day.indices.length);
+day.news.forEach((n,k)=>{
+  const a=el('article','card');
+  a.style.setProperty('--c1',n.c1);a.style.setProperty('--c2',n.c2);
+  const top=el('div','top');top.append(el('div','ico',n.icon),el('div','cat',n.cat));
+  a.append(top,el('h2',null,n.title),el('p',null,n.summary));
+  let spoken=n.cat+'. '+n.title+'. '+n.summary;
+  if(n.strategy){
+    const x=el('div','extra');
+    const b1=el('b',null,'กลยุทธ์เบื้องหลัง');const b2=el('b',null,'ผู้จัดการสาขาควรทำ');
+    x.append(b1,document.createTextNode(n.strategy),b2,document.createTextNode(n.action));
+    a.append(x);
+    spoken+='. กลยุทธ์เบื้องหลัง '+n.strategy+'. ผู้จัดการสาขาควรทำ '+n.action;
+  }
+  a.append(el('p','src','แหล่งข่าว: '+n.source));
+  const b=el('button','say','🔊 ฟังเรื่องนี้');b.onclick=()=>play([k],true);
+  a.append(b);$('news').append(a);
+  cards.push({node:a,text:'เรื่องที่ '+(k+1)+'. '+spoken,label:n.cat});
+});
+if(!synth)document.querySelectorAll('.say').forEach(b=>b.disabled=true);
+}
+
+/* ขนาดตัวอักษร */
+const sizes=[20,22,26,30];let si=1;
+try{const s=parseInt(localStorage.getItem('fs'),10);if(s>=0&&s<sizes.length)si=s}catch(e){}
+function applySize(){document.documentElement.style.setProperty('--fs',sizes[si]+'px');try{localStorage.setItem('fs',si)}catch(e){}}
+$('smaller').onclick=()=>{si=Math.max(0,si-1);applySize()};
+$('bigger').onclick=()=>{si=Math.min(sizes.length-1,si+1);applySize()};
+applySize();
+
+/* เสียงอ่าน */
+const synth=window.speechSynthesis;
+let list=[],qi=0,active=false,rate=.9,tok=0;
+function mark(){cards.forEach((c,i)=>c.node.classList.toggle('now',active&&list[qi]===i))}
+function say(){
+  if(!active||qi>=list.length){stop();return}
+  const my=++tok;synth.resume();synth.cancel();
+  const c=cards[list[qi]];
+  const u=new SpeechSynthesisUtterance(c.text);u.lang='th-TH';u.rate=rate;
+  const v=synth.getVoices().find(v=>v.lang&&v.lang.toLowerCase().replace('_','-').startsWith('th'));if(v)u.voice=v;
+  u.onend=()=>{if(my===tok&&active){qi++;say()}};
+  u.onerror=()=>{};
+  $('now').textContent='กำลังอ่าน: '+c.label+' ('+(qi+1)+' จาก '+list.length+')';
+  $('pp').textContent='⏸ หยุด';mark();synth.speak(u);
+  c.node.scrollIntoView({block:'center',behavior:'smooth'});
+}
+function play(l,one){
+  if(!synth){alert('เครื่องนี้ยังไม่รองรับเสียงอ่านในเบราว์เซอร์');return}
+  list=l;qi=0;active=true;$('bar').classList.add('on');say();
+}
+function stop(){active=false;tok++;if(synth){synth.resume();synth.cancel()}$('bar').classList.remove('on');mark()}
+$('all').onclick=()=>play(cards.map((_,i)=>i));
+$('skip').onclick=()=>{if(active){qi++;say()}};
+$('stop').onclick=stop;
+$('pp').onclick=()=>{
+  if(!synth)return;
+  if(synth.paused){synth.resume();$('pp').textContent='⏸ หยุด'}
+  else{synth.pause();$('pp').textContent='▶ เล่นต่อ'}
+};
+$('rate').onchange=e=>{rate=parseFloat(e.target.value);if(active)say()};
+/* ปฏิทินข่าวย้อนหลัง */
+const H=D.history||{};
+Object.values(H).forEach(h=>h.news.forEach(n=>{
+  const b=D.news.find(x=>x.cat===n.cat)||{};
+  n.icon=n.icon||b.icon;n.c1=n.c1||b.c1;n.c2=n.c2||b.c2;n.source=n.source||'ตัวอย่าง';
+}));
+const pad=n=>String(n).padStart(2,'0');
+const keyOf=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const todayKey=D.date||keyOf(new Date());
+const hk=Object.keys(H).sort();
+let vm=new Date();vm=new Date(vm.getFullYear(),vm.getMonth(),1);
+if(hk.length&&!hk.some(k=>k.slice(0,7)===keyOf(vm).slice(0,7))){const l=hk[hk.length-1];vm=new Date(+l.slice(0,4),+l.slice(5,7)-1,1)}
+let shown=todayKey;
+function drawCal(){
+  const g=$('grid');g.textContent='';
+  $('mname').textContent=vm.toLocaleDateString('th-TH',{month:'long',year:'numeric'});
+  ['อา','จ','อ','พ','พฤ','ศ','ส'].forEach(d=>g.append(el('div','dow',d)));
+  const first=vm.getDay(),days=new Date(vm.getFullYear(),vm.getMonth()+1,0).getDate();
+  for(let i=0;i<first;i++)g.append(el('div'));
+  for(let d=1;d<=days;d++){
+    const k=vm.getFullYear()+'-'+pad(vm.getMonth()+1)+'-'+pad(d);
+    const ok=!!H[k]||k===todayKey;
+    const b=el('button','day'+(ok?' has':'')+(k===shown?' sel':''),d);
+    b.disabled=!ok;
+    if(ok)b.onclick=()=>show(k);
+    g.append(b);
+  }
+}
+function show(k){
+  shown=k;
+  const isToday=k===todayKey;
+  render(isToday?D:H[k]);
+  $('viewing').hidden=isToday;
+  if(!isToday)$('vtext').textContent='กำลังดูข่าวย้อนหลังของ'+new Date(k+'T00:00:00').toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  $('cal').hidden=true;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+$('histbtn').onclick=()=>{$('cal').hidden=!$('cal').hidden;if(!$('cal').hidden)drawCal()};
+$('prev').onclick=()=>{vm=new Date(vm.getFullYear(),vm.getMonth()-1,1);drawCal()};
+$('next').onclick=()=>{vm=new Date(vm.getFullYear(),vm.getMonth()+1,1);drawCal()};
+$('back').onclick=()=>show(todayKey);
+render(D);
+if(!synth){document.querySelectorAll('.all').forEach(b=>b.disabled=true)}
+else if(synth.onvoiceschanged!==undefined){synth.onvoiceschanged=()=>{}}
+})();
+</script>
+</body>
+</html>
